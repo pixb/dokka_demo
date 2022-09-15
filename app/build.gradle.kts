@@ -49,6 +49,17 @@ tasks {
     }
 }
 
+
+val dokkaPlugin by configurations
+tasks.register<org.jetbrains.dokka.gradle.DokkaMultiModuleTask>("dokkaRoot") {
+    val dokkaOutputDir = "${project.buildDir}/dokka"
+    dependencies {
+        dokkaPlugin("org.jetbrains.dokka:all-modules-page-plugin:1.7.10")
+    }
+    outputDirectory.set(file(dokkaOutputDir))
+    addChildTasks(childProjects.values, "dokkaHtmlPartial")
+}
+
 dependencies {
 
     implementation("androidx.core:core-ktx:1.7.0")
@@ -57,6 +68,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("org.jetbrains.dokka:android-documentation-plugin:1.7.10")
     implementation("org.jetbrains.dokka:kotlin-as-java-plugin:1.7.10")
+    implementation(project(mapOf("path" to ":library1")))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
